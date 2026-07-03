@@ -1,0 +1,914 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PlushieMealWheel</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #493427;
+      --muted: #7e6b5d;
+      --cream: #fff8e8;
+      --panel: rgba(255, 250, 239, 0.9);
+      --line: #ecd9c2;
+      --grass: #9fc873;
+      --grass-dark: #5d8f50;
+      --sky: #bfeafa;
+      --butter: #ffd96a;
+      --pink: #f58aae;
+      --lavender: #b58ce5;
+      --peach: #f7a766;
+      --teal: #76c8bd;
+      --brown: #a9653e;
+      --accent: #ee7ca5;
+      --accent-strong: #dc5f8c;
+      --shadow: 0 24px 70px rgba(83, 58, 39, 0.18);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      overflow-x: hidden;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 16%, rgba(245, 138, 174, 0.28), transparent 18rem),
+        radial-gradient(circle at 88% 18%, rgba(118, 200, 189, 0.24), transparent 20rem),
+        linear-gradient(180deg, rgba(191, 234, 250, 0.98) 0%, rgba(255, 248, 232, 0.95) 48%, rgba(192, 222, 139, 0.92) 100%),
+        repeating-linear-gradient(90deg, rgba(93, 143, 80, 0.16) 0 10px, rgba(159, 200, 115, 0.1) 10px 20px);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: auto 0 0;
+      height: 24vh;
+      pointer-events: none;
+      background:
+        linear-gradient(180deg, transparent 0%, rgba(95, 142, 75, 0.3) 100%),
+        repeating-linear-gradient(78deg, transparent 0 15px, rgba(66, 113, 59, 0.16) 15px 17px, transparent 17px 34px);
+      opacity: 0.58;
+    }
+
+    main {
+      position: relative;
+      width: min(1160px, 100%);
+      min-height: 100vh;
+      margin: 0 auto;
+      padding: 32px;
+      display: grid;
+      grid-template-columns: minmax(330px, 1fr) minmax(280px, 350px);
+      gap: 32px;
+      align-items: center;
+    }
+
+    .picker-area {
+      display: grid;
+      justify-items: center;
+      gap: 22px;
+    }
+
+    .title-block {
+      position: relative;
+      z-index: 3;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0;
+      color: #5b3b2b;
+      font-size: clamp(2.35rem, 4.6vw, 5rem);
+      line-height: 0.94;
+      letter-spacing: 0;
+      text-shadow: 0 4px 0 rgba(255, 255, 255, 0.7);
+    }
+
+    .scene {
+      position: relative;
+      width: min(92vw, 700px);
+      min-height: min(92vw, 700px);
+      display: grid;
+      place-items: center;
+      isolation: isolate;
+    }
+
+    .petal {
+      position: absolute;
+      z-index: 1;
+      width: 17px;
+      height: 23px;
+      border-radius: 55% 55% 48% 48%;
+      background: var(--pink);
+      opacity: 0.8;
+      box-shadow: 0 6px 12px rgba(83, 58, 39, 0.12);
+      animation: petalDrift 7s ease-in-out infinite;
+    }
+
+    .petal-one {
+      top: 13%;
+      left: 13%;
+      background: var(--lavender);
+    }
+
+    .petal-two {
+      top: 72%;
+      left: 7%;
+      background: var(--peach);
+      animation-delay: -2.4s;
+    }
+
+    .petal-three {
+      top: 28%;
+      right: 10%;
+      background: var(--butter);
+      animation-delay: -4s;
+    }
+
+    .petal-four {
+      right: 20%;
+      bottom: 11%;
+      background: var(--teal);
+      animation-delay: -1.3s;
+    }
+
+    .combo-stage {
+      position: relative;
+      z-index: 3;
+      width: min(84vw, 610px);
+      aspect-ratio: 4 / 5;
+      border: 10px solid rgba(255, 248, 232, 0.96);
+      border-radius: 8px;
+      overflow: hidden;
+      background: var(--cream);
+      box-shadow: var(--shadow), inset 0 0 0 8px rgba(255, 255, 255, 0.38);
+      transform-origin: center;
+    }
+
+    .combo-stage::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background:
+        linear-gradient(180deg, rgba(73, 52, 39, 0) 36%, rgba(73, 52, 39, 0.42) 100%),
+        radial-gradient(circle at 24% 18%, rgba(255, 255, 255, 0.2), transparent 13rem);
+    }
+
+    .combo-stage.is-cycling {
+      animation: plushPulse 680ms ease-in-out infinite;
+    }
+
+    .combo-stage.is-celebrating {
+      animation: stageBounce 760ms cubic-bezier(0.2, 1.35, 0.3, 1);
+    }
+
+    .combo-image {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      transform: scale(1.015);
+      transition: opacity 130ms ease, transform 240ms ease;
+    }
+
+    .combo-stage.is-cycling .combo-image {
+      transform: scale(1.055);
+    }
+
+    .combo-stage.is-swapping .combo-image {
+      opacity: 0.76;
+    }
+
+    .combo-overlay {
+      position: absolute;
+      left: clamp(16px, 4vw, 34px);
+      right: clamp(16px, 4vw, 34px);
+      bottom: clamp(16px, 4vw, 34px);
+      z-index: 2;
+      padding: clamp(16px, 3vw, 26px);
+      border: 1px solid rgba(255, 248, 232, 0.76);
+      border-radius: 8px;
+      background: rgba(255, 248, 232, 0.86);
+      box-shadow: 0 18px 36px rgba(73, 52, 39, 0.24);
+      backdrop-filter: blur(14px);
+      transform-origin: center bottom;
+    }
+
+    .combo-stage.is-cycling .combo-overlay {
+      animation: overlayShuffle 360ms ease-in-out infinite;
+    }
+
+    .combo-stage.is-celebrating .combo-overlay {
+      animation: resultPop 700ms cubic-bezier(0.2, 1.5, 0.3, 1);
+    }
+
+    .combo-eyebrow {
+      margin: 0 0 7px;
+      color: #7a8f54;
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .combo-name {
+      min-height: 1.04em;
+      margin: 0;
+      color: #5b3b2b;
+      font-size: clamp(2.1rem, 7vw, 5.1rem);
+      line-height: 0.94;
+      font-weight: 900;
+      letter-spacing: 0;
+      overflow-wrap: anywhere;
+      text-shadow: 0 3px 0 rgba(255, 255, 255, 0.72);
+    }
+
+    .floating-icons {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .floating-icon {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: var(--icon-size, 64px);
+      aspect-ratio: 1;
+      border: 5px solid rgba(255, 248, 232, 0.96);
+      border-radius: 50%;
+      object-fit: cover;
+      opacity: 0.86;
+      box-shadow: 0 14px 28px rgba(83, 58, 39, 0.2);
+      animation: oscillateAround var(--float-duration, 8s) ease-in-out var(--float-delay, 0s) infinite both;
+      will-change: transform;
+    }
+
+    .panel {
+      position: relative;
+      z-index: 4;
+      width: 100%;
+      overflow: hidden;
+      background: var(--panel);
+      border: 1px solid rgba(236, 217, 194, 0.92);
+      border-radius: 8px;
+      box-shadow: 0 18px 60px rgba(83, 58, 39, 0.15);
+      padding: 24px;
+      backdrop-filter: blur(16px);
+    }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto;
+      height: 8px;
+      background: linear-gradient(90deg, var(--pink), var(--butter), var(--teal), var(--lavender), var(--peach));
+    }
+
+    .result-label,
+    .entries-title {
+      margin: 0 0 8px;
+      color: #8a6a51;
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .result-name {
+      min-height: 3.4rem;
+      margin: 0;
+      color: #5b3b2b;
+      font-size: clamp(2rem, 6vw, 3.1rem);
+      line-height: 1.02;
+      font-weight: 900;
+      letter-spacing: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .panel.is-celebrating .result-name {
+      animation: resultPop 700ms cubic-bezier(0.2, 1.5, 0.3, 1);
+    }
+
+    .start-button {
+      width: 100%;
+      min-height: 58px;
+      margin: 24px 0;
+      border: 0;
+      border-radius: 8px;
+      color: #ffffff;
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      font: inherit;
+      font-size: 1.05rem;
+      font-weight: 900;
+      letter-spacing: 0;
+      cursor: pointer;
+      box-shadow: 0 12px 24px rgba(220, 95, 140, 0.26);
+      transition: transform 160ms ease, filter 160ms ease, box-shadow 160ms ease;
+    }
+
+    .start-button::before {
+      content: "";
+      width: 0;
+      height: 0;
+      border-top: 8px solid transparent;
+      border-bottom: 8px solid transparent;
+      border-left: 13px solid currentColor;
+      transform: translateX(2px);
+    }
+
+    .start-button:hover {
+      filter: saturate(1.08) brightness(1.02);
+      transform: translateY(-1px);
+      box-shadow: 0 16px 30px rgba(220, 95, 140, 0.3);
+    }
+
+    .start-button:active {
+      transform: translateY(0);
+      box-shadow: 0 10px 20px rgba(220, 95, 140, 0.24);
+    }
+
+    .start-button:disabled {
+      cursor: wait;
+      opacity: 0.7;
+      transform: none;
+    }
+
+    .entries {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+
+    .entries li {
+      min-height: 30px;
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.66);
+      color: #654736;
+      font-size: 0.86rem;
+      font-weight: 800;
+      line-height: 1.2;
+      box-shadow: 0 5px 12px rgba(83, 58, 39, 0.06);
+    }
+
+    .entries li.is-winner {
+      color: #ffffff;
+      background: #6f9f59;
+      border-color: #6f9f59;
+    }
+
+    @keyframes oscillateAround {
+      0% {
+        transform: translate3d(
+          calc(var(--anchor-x, 0vw) + var(--offset-a-x, 0px)),
+          calc(var(--anchor-y, 0vh) + var(--offset-a-y, 0px)),
+          0
+        ) scale(var(--icon-scale, 1)) rotate(var(--rotate-a, 0deg));
+      }
+
+      35% {
+        transform: translate3d(
+          calc(var(--anchor-x, 0vw) + var(--offset-b-x, 0px)),
+          calc(var(--anchor-y, 0vh) + var(--offset-b-y, 0px)),
+          0
+        ) scale(calc(var(--icon-scale, 1) * 1.05)) rotate(var(--rotate-b, 8deg));
+      }
+
+      68% {
+        transform: translate3d(
+          calc(var(--anchor-x, 0vw) + var(--offset-c-x, 0px)),
+          calc(var(--anchor-y, 0vh) + var(--offset-c-y, 0px)),
+          0
+        ) scale(calc(var(--icon-scale, 1) * 0.98)) rotate(var(--rotate-c, -8deg));
+      }
+
+      100% {
+        transform: translate3d(
+          calc(var(--anchor-x, 0vw) + var(--offset-a-x, 0px)),
+          calc(var(--anchor-y, 0vh) + var(--offset-a-y, 0px)),
+          0
+        ) scale(var(--icon-scale, 1)) rotate(var(--rotate-a, 0deg));
+      }
+    }
+
+    @keyframes petalDrift {
+      0%,
+      100% {
+        transform: translate3d(0, 0, 0) rotate(0deg);
+      }
+
+      50% {
+        transform: translate3d(10px, -18px, 0) rotate(16deg);
+      }
+    }
+
+    @keyframes plushPulse {
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.014);
+      }
+    }
+
+    @keyframes overlayShuffle {
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-5px);
+      }
+    }
+
+    @keyframes stageBounce {
+      0% {
+        transform: scale(0.97);
+      }
+
+      58% {
+        transform: scale(1.025);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    @keyframes resultPop {
+      0% {
+        transform: scale(0.88);
+      }
+
+      58% {
+        transform: scale(1.08);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    @media (max-width: 860px) {
+      main {
+        min-height: auto;
+        grid-template-columns: 1fr;
+        padding: 24px 18px 40px;
+        gap: 28px;
+      }
+
+      .panel {
+        order: 2;
+      }
+
+      .scene {
+        width: 100%;
+        min-height: min(118vw, 650px);
+      }
+
+      .combo-stage {
+        width: min(100%, 520px);
+        border-width: 7px;
+      }
+
+      .combo-overlay {
+        left: 14px;
+        right: 14px;
+        bottom: 14px;
+      }
+
+      .floating-icon {
+        border-width: 4px;
+      }
+
+      .result-name {
+        min-height: auto;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .petal,
+      .floating-icon,
+      .combo-stage,
+      .combo-stage.is-cycling,
+      .combo-stage.is-cycling .combo-overlay,
+      .combo-stage.is-celebrating,
+      .combo-stage.is-celebrating .combo-overlay,
+      .panel.is-celebrating .result-name,
+      .start-button {
+        animation: none;
+        transition: none;
+      }
+
+      .floating-icon {
+        opacity: 0.24;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="floating-icons" aria-hidden="true">
+    <img class="floating-icon" src="images/daniel.jpg" alt="">
+    <img class="floating-icon" src="images/elephant.jpg" alt="">
+    <img class="floating-icon" src="images/farhanah.jpg" alt="">
+    <img class="floating-icon" src="images/fox.jpg" alt="">
+    <img class="floating-icon" src="images/kitten.jpg" alt="">
+    <img class="floating-icon" src="images/lamb.jpg" alt="">
+    <img class="floating-icon" src="images/lewis.jpg" alt="">
+    <img class="floating-icon" src="images/panda.jpg" alt="">
+    <img class="floating-icon" src="images/penguin.jpg" alt="">
+    <img class="floating-icon" src="images/puppy.jpg" alt="">
+  </div>
+
+  <main>
+    <section class="picker-area" aria-label="Plushie meal picker">
+      <div class="title-block">
+        <h1>Plushie Meal Wheel</h1>
+      </div>
+
+      <div class="scene">
+        <div class="petal petal-one" aria-hidden="true"></div>
+        <div class="petal petal-two" aria-hidden="true"></div>
+        <div class="petal petal-three" aria-hidden="true"></div>
+        <div class="petal petal-four" aria-hidden="true"></div>
+
+        <div class="combo-stage" id="comboStage">
+          <img class="combo-image" id="comboImage" src="images/daniel.jpg" alt="Brown plush bear in a flower garden">
+          <div class="combo-overlay">
+            <p class="combo-eyebrow">Today's pick</p>
+            <p class="combo-name" id="comboName" aria-live="polite">Ready</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <aside class="panel" id="resultPanel">
+      <p class="result-label">Result</p>
+      <p class="result-name" id="result" aria-live="polite">Ready</p>
+      <button class="start-button" id="startButton" type="button">Start</button>
+
+      <p class="entries-title">Entries</p>
+      <ul class="entries" id="entriesList"></ul>
+    </aside>
+  </main>
+
+  <script>
+    const entries = [
+      "Saizeriya",
+      "Jollibee",
+      "Hot hideout",
+      "PLSQ Kopitiam",
+      "Dabao Box",
+      "Singpost Astons",
+      "Singpost Twyst",
+      "PLQ Kopitiam",
+      "Sanook",
+      "Guan guan",
+      "Subway",
+      "Donki",
+      "Guan guan",
+      "Scarlett",
+      "PLSQ Kopitiam",
+      "PLQ Kopitiam",
+      "PLQ Sukiya",
+      "haig road",
+      "haig road",
+      "haig road",
+      "Baiwei",
+      "Baiwei",
+      "Baiwei",
+      "lotus thai",
+      "haig road",
+      "sukiya",
+      "sukiya",
+      "sukiya"
+    ];
+
+    const visibleEntries = [...new Set(entries)];
+    const imageChoices = [
+      {
+        src: "images/daniel.jpg",
+        alt: "Brown plush bear in a flower garden"
+      },
+      {
+        src: "images/elephant.jpg",
+        alt: "Elephant plushie in a flower garden"
+      },
+      {
+        src: "images/farhanah.jpg",
+        alt: "White bunny plushie in a pink flower garden"
+      },
+      {
+        src: "images/fox.jpg",
+        alt: "Fox plushie in a flower garden"
+      },
+      {
+        src: "images/kitten.jpg",
+        alt: "Kitten plushie in a flower garden"
+      },
+      {
+        src: "images/lamb.jpg",
+        alt: "Lamb plushie in a flower garden"
+      },
+      {
+        src: "images/lewis.jpg",
+        alt: "Yellow chick plushie in a flower garden"
+      },
+      {
+        src: "images/panda.jpg",
+        alt: "Panda plushie in a flower garden"
+      },
+      {
+        src: "images/penguin.jpg",
+        alt: "Penguin plushie in a flower garden"
+      },
+      {
+        src: "images/puppy.jpg",
+        alt: "Puppy plushie in a flower garden"
+      }
+    ];
+
+    const defaultTiming = {
+      imagePeriod: 500,
+      textPeriod: 200,
+      totalDuration: 5000
+    };
+
+    const resultEl = document.getElementById("result");
+    const resultPanel = document.getElementById("resultPanel");
+    const startButton = document.getElementById("startButton");
+    const comboStage = document.getElementById("comboStage");
+    const comboImage = document.getElementById("comboImage");
+    const comboName = document.getElementById("comboName");
+    const entriesList = document.getElementById("entriesList");
+    const floatingIcons = Array.from(document.querySelectorAll(".floating-icon"));
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const timing = {
+      imagePeriod: getTimingParam("imagePeriod", defaultTiming.imagePeriod),
+      textPeriod: getTimingParam("textPeriod", defaultTiming.textPeriod),
+      totalDuration: getTimingParam("totalDuration", defaultTiming.totalDuration)
+    };
+
+    let selectedName = null;
+    let isCycling = false;
+    let currentCombo = {
+      entryIndex: 0,
+      imageIndex: 0
+    };
+    let imageCycleTimer = 0;
+    let textCycleTimer = 0;
+    let stopCycleTimer = 0;
+    let celebrationTimer = 0;
+
+    function getTimingParam(name, fallback) {
+      const params = new URLSearchParams(window.location.search);
+      const rawValue = params.get(name);
+      const value = Number(rawValue);
+
+      if (!Number.isFinite(value) || value <= 0) {
+        return fallback;
+      }
+
+      return value < 20 ? value * 1000 : value;
+    }
+
+    function buildEntriesList() {
+      const fragment = document.createDocumentFragment();
+
+      visibleEntries.forEach((entry) => {
+        const item = document.createElement("li");
+        item.textContent = entry;
+        item.dataset.name = entry;
+        fragment.appendChild(item);
+      });
+
+      entriesList.appendChild(fragment);
+    }
+
+    function randomIndex(max) {
+      const range = 0x100000000;
+      const limit = range - (range % max);
+      const values = new Uint32Array(1);
+
+      do {
+        crypto.getRandomValues(values);
+      } while (values[0] >= limit);
+
+      return values[0] % max;
+    }
+
+    function randomBetween(min, max) {
+      return min + Math.random() * (max - min);
+    }
+
+    function getOscillationRadius() {
+      return window.matchMedia("(max-width: 860px)").matches ? 64 : 96;
+    }
+
+    function randomViewportValue(min, max, unit) {
+      return `${randomBetween(min, max).toFixed(2)}${unit}`;
+    }
+
+    function randomOffset(radius) {
+      const angle = randomBetween(0, Math.PI * 2);
+      const distance = randomBetween(radius * 0.22, radius);
+
+      return {
+        x: Math.cos(angle) * distance,
+        y: Math.sin(angle) * distance
+      };
+    }
+
+    function setFloatingIconAnchor(icon) {
+      icon.style.setProperty("--anchor-x", randomViewportValue(3, 88, "vw"));
+      icon.style.setProperty("--anchor-y", randomViewportValue(4, 88, "vh"));
+    }
+
+    function randomizeFloatingIcon(icon, useDelay) {
+      const radius = getOscillationRadius();
+      const duration = randomBetween(4200, 9200);
+      const scale = randomBetween(0.76, 1.22);
+      const offsets = [randomOffset(radius), randomOffset(radius), randomOffset(radius)];
+
+      icon.style.setProperty("--icon-size", `${randomBetween(44, 82).toFixed(0)}px`);
+      icon.style.setProperty("--icon-scale", scale.toFixed(2));
+      ["a", "b", "c"].forEach((label, index) => {
+        icon.style.setProperty(`--offset-${label}-x`, `${offsets[index].x.toFixed(1)}px`);
+        icon.style.setProperty(`--offset-${label}-y`, `${offsets[index].y.toFixed(1)}px`);
+        icon.style.setProperty(`--rotate-${label}`, `${randomBetween(-18, 18).toFixed(1)}deg`);
+      });
+      icon.style.setProperty("--float-duration", `${duration.toFixed(0)}ms`);
+      icon.style.setProperty("--float-delay", useDelay ? `${randomBetween(0, 3200).toFixed(0)}ms` : "0ms");
+
+      icon.style.animation = "none";
+      void icon.offsetWidth;
+      icon.style.animation = "";
+    }
+
+    function placeStaticFloatingIcon(icon) {
+      const size = randomBetween(44, 78);
+      const scale = randomBetween(0.72, 1.08);
+
+      icon.style.width = `${size.toFixed(0)}px`;
+      setFloatingIconAnchor(icon);
+      icon.style.transform = `translate3d(var(--anchor-x), var(--anchor-y), 0) scale(${scale.toFixed(2)}) rotate(${randomBetween(-14, 14).toFixed(1)}deg)`;
+    }
+
+    function initializeFloatingIcons() {
+      floatingIcons.forEach((icon) => {
+        if (prefersReducedMotion) {
+          placeStaticFloatingIcon(icon);
+          return;
+        }
+
+        setFloatingIconAnchor(icon);
+        randomizeFloatingIcon(icon, true);
+      });
+    }
+
+    function renderCombo(entryIndex, imageIndex) {
+      const image = imageChoices[imageIndex];
+      currentCombo = { entryIndex, imageIndex };
+      comboImage.src = image.src;
+      comboImage.alt = image.alt;
+      comboName.textContent = entries[entryIndex];
+      triggerSwap();
+    }
+
+    function renderImage(imageIndex) {
+      const image = imageChoices[imageIndex];
+      currentCombo.imageIndex = imageIndex;
+      comboImage.src = image.src;
+      comboImage.alt = image.alt;
+      triggerSwap();
+    }
+
+    function renderText(entryIndex) {
+      currentCombo.entryIndex = entryIndex;
+      comboName.textContent = entries[entryIndex];
+      triggerSwap();
+    }
+
+    function triggerSwap() {
+      comboStage.classList.remove("is-swapping");
+      void comboStage.offsetWidth;
+      comboStage.classList.add("is-swapping");
+      window.setTimeout(() => {
+        comboStage.classList.remove("is-swapping");
+      }, 120);
+    }
+
+    function stopTimers() {
+      window.clearTimeout(imageCycleTimer);
+      window.clearTimeout(textCycleTimer);
+      window.clearTimeout(stopCycleTimer);
+    }
+
+    function clearWinner() {
+      stopTimers();
+      entriesList.querySelectorAll("li.is-winner").forEach((item) => {
+        item.classList.remove("is-winner");
+      });
+      resultPanel.classList.remove("is-celebrating");
+      comboStage.classList.remove("is-celebrating");
+      window.clearTimeout(celebrationTimer);
+    }
+
+    function celebrate() {
+      resultPanel.classList.remove("is-celebrating");
+      comboStage.classList.remove("is-celebrating");
+      void comboStage.offsetWidth;
+      resultPanel.classList.add("is-celebrating");
+      comboStage.classList.add("is-celebrating");
+      celebrationTimer = window.setTimeout(() => {
+        resultPanel.classList.remove("is-celebrating");
+        comboStage.classList.remove("is-celebrating");
+      }, 900);
+    }
+
+    function setWinner(entryIndex, imageIndex) {
+      const winnerName = entries[entryIndex];
+      selectedName = winnerName;
+      resultEl.textContent = winnerName;
+      renderCombo(entryIndex, imageIndex);
+
+      entriesList.querySelectorAll("li").forEach((item) => {
+        item.classList.toggle("is-winner", item.dataset.name === winnerName);
+      });
+
+      celebrate();
+    }
+
+    function cyclePicker() {
+      if (isCycling) {
+        return;
+      }
+
+      isCycling = true;
+      startButton.disabled = true;
+      resultEl.textContent = "Cycling";
+      comboStage.classList.add("is-cycling");
+
+      if (selectedName !== null) {
+        clearWinner();
+      }
+
+      const finalEntryIndex = randomIndex(entries.length);
+      const finalImageIndex = randomIndex(imageChoices.length);
+      const imagePeriod = prefersReducedMotion ? 500 : timing.imagePeriod;
+      const textPeriod = prefersReducedMotion ? 250 : timing.textPeriod;
+      const totalDuration = prefersReducedMotion ? 900 : timing.totalDuration;
+
+      function cycleImage() {
+        renderImage(randomIndex(imageChoices.length));
+        imageCycleTimer = window.setTimeout(cycleImage, imagePeriod);
+      }
+
+      function cycleText() {
+        renderText(randomIndex(entries.length));
+        textCycleTimer = window.setTimeout(cycleText, textPeriod);
+      }
+
+      cycleImage();
+      cycleText();
+
+      stopCycleTimer = window.setTimeout(() => {
+        stopTimers();
+        comboStage.classList.remove("is-cycling");
+        setWinner(finalEntryIndex, finalImageIndex);
+        isCycling = false;
+        startButton.disabled = false;
+        startButton.focus();
+      }, totalDuration);
+    }
+
+    buildEntriesList();
+    initializeFloatingIcons();
+    startButton.addEventListener("click", cyclePicker);
+  </script>
+</body>
+</html>
