@@ -1,2 +1,11 @@
 Thumbs.db
 .DS_Store
+
+# Local tooling and workspace metadata
+.codex/
+.agents/
+.vscode/
+.idea/
+.cache/
+.tmp/
+.venv/

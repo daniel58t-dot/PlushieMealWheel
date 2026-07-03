@@ -23,6 +23,14 @@
       --brown: #a9653e;
       --accent: #ee7ca5;
       --accent-strong: #dc5f8c;
+      --plush-tan: #c6a290;
+      --plush-beige: #d8b490;
+      --plush-taupe: #b4907e;
+      --moss: #6c7e36;
+      --olive: #485a24;
+      --golden-grass: #909036;
+      --soft-blush: #eaa0ad;
+      --soft-teal: #86c7b8;
       --shadow: 0 24px 70px rgba(83, 58, 39, 0.18);
     }
 
@@ -35,15 +43,19 @@
     }
 
     body {
+      position: relative;
+      isolation: isolate;
       margin: 0;
       min-height: 100vh;
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       color: var(--ink);
       background:
-        radial-gradient(circle at 12% 16%, rgba(245, 138, 174, 0.28), transparent 18rem),
-        radial-gradient(circle at 88% 18%, rgba(118, 200, 189, 0.24), transparent 20rem),
-        linear-gradient(180deg, rgba(191, 234, 250, 0.98) 0%, rgba(255, 248, 232, 0.95) 48%, rgba(192, 222, 139, 0.92) 100%),
-        repeating-linear-gradient(90deg, rgba(93, 143, 80, 0.16) 0 10px, rgba(159, 200, 115, 0.1) 10px 20px);
+        radial-gradient(ellipse at 16% 14%, rgba(234, 160, 173, 0.32), transparent 22rem),
+        radial-gradient(ellipse at 84% 18%, rgba(134, 199, 184, 0.26), transparent 24rem),
+        radial-gradient(circle at 50% 44%, rgba(216, 180, 144, 0.22), transparent 32rem),
+        repeating-linear-gradient(108deg, rgba(180, 144, 126, 0.08) 0 1px, transparent 1px 10px),
+        repeating-linear-gradient(18deg, rgba(255, 255, 255, 0.2) 0 1px, transparent 1px 13px),
+        linear-gradient(180deg, #fff4e4 0%, rgba(255, 248, 232, 0.98) 34%, rgba(198, 162, 144, 0.34) 68%, rgba(108, 126, 54, 0.34) 100%);
       overflow-x: hidden;
     }
 
@@ -51,16 +63,33 @@
       content: "";
       position: fixed;
       inset: auto 0 0;
+      z-index: 0;
       height: 24vh;
       pointer-events: none;
       background:
-        linear-gradient(180deg, transparent 0%, rgba(95, 142, 75, 0.3) 100%),
-        repeating-linear-gradient(78deg, transparent 0 15px, rgba(66, 113, 59, 0.16) 15px 17px, transparent 17px 34px);
-      opacity: 0.58;
+        linear-gradient(180deg, transparent 0%, rgba(144, 144, 54, 0.18) 38%, rgba(108, 126, 54, 0.36) 100%),
+        repeating-linear-gradient(78deg, transparent 0 16px, rgba(72, 90, 36, 0.14) 16px 18px, transparent 18px 36px),
+        repeating-linear-gradient(104deg, rgba(216, 180, 144, 0.08) 0 2px, transparent 2px 24px);
+      opacity: 0.54;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        repeating-radial-gradient(circle at 18% 22%, rgba(255, 255, 255, 0.16) 0 1px, transparent 1px 6px),
+        repeating-linear-gradient(102deg, rgba(180, 144, 126, 0.08) 0 1px, transparent 1px 8px),
+        repeating-linear-gradient(12deg, rgba(255, 244, 228, 0.16) 0 1px, transparent 1px 10px);
+      mix-blend-mode: soft-light;
+      opacity: 0.55;
     }
 
     main {
       position: relative;
+      z-index: 1;
       width: min(1160px, 100%);
       min-height: 100vh;
       margin: 0 auto;
@@ -80,8 +109,9 @@
     .title-block {
       position: relative;
       z-index: 3;
+      width: 100%;
       text-align: center;
-      --title-font-size: 2rem;
+      --title-font-size: 1.5rem;
     }
 
     .title-block h1 {
@@ -90,10 +120,23 @@
       font-size: var(--title-font-size);
       line-height: 0.94;
       letter-spacing: 0;
+      white-space: nowrap;
       text-shadow: 0 4px 0 rgba(255, 255, 255, 0.7);
     }
 
-    @media (min-width: 380px) {
+    @media (min-width: 320px) {
+      .title-block {
+        --title-font-size: 1.75rem;
+      }
+    }
+
+    @media (min-width: 360px) {
+      .title-block {
+        --title-font-size: 2rem;
+      }
+    }
+
+    @media (min-width: 480px) {
       .title-block {
         --title-font-size: 2.35rem;
       }
@@ -117,15 +160,9 @@
       }
     }
 
-    @media (min-width: 1500px) {
-      .title-block {
-        --title-font-size: 5rem;
-      }
-    }
-
     .scene {
       position: relative;
-      width: min(92vw, 700px);
+      width: min(100%, 700px);
       min-height: min(92vw, 700px);
       display: grid;
       place-items: center;
@@ -174,7 +211,7 @@
     .combo-stage {
       position: relative;
       z-index: 3;
-      width: min(84vw, 610px);
+      width: min(100%, 610px);
       aspect-ratio: 4 / 5;
       border: 10px solid rgba(255, 248, 232, 0.96);
       border-radius: 8px;
@@ -513,32 +550,39 @@
       }
     }
 
-    @media (max-width: 860px) {
+    @media (max-width: 919px) {
       main {
-        min-height: auto;
+        min-height: 100svh;
         grid-template-columns: 1fr;
-        padding: 24px 18px 40px;
-        gap: 28px;
+        padding: clamp(14px, 2.8vh, 24px) 18px clamp(18px, 3vh, 32px);
+        gap: clamp(14px, 2.5vh, 22px);
+        align-content: start;
+      }
+
+      .picker-area {
+        gap: clamp(10px, 2vh, 16px);
       }
 
       .panel {
         order: 2;
+        padding: clamp(16px, 2.4vh, 22px);
       }
 
       .scene {
         width: 100%;
-        min-height: min(118vw, 650px);
+        min-height: auto;
       }
 
       .combo-stage {
-        width: min(100%, 520px);
+        width: min(100%, 520px, max(210px, calc((100vh - 270px) * 0.8)));
+        width: min(100%, 520px, max(210px, calc((100svh - 270px) * 0.8)));
         border-width: 7px;
       }
 
       .combo-overlay {
-        left: 14px;
-        right: 14px;
-        bottom: 14px;
+        left: 12px;
+        right: 12px;
+        bottom: 12px;
       }
 
       .floating-icon {
@@ -546,7 +590,48 @@
       }
 
       .result-name {
-        min-height: auto;
+        min-height: 2.5rem;
+        font-size: clamp(1.8rem, 7vw, 2.8rem);
+      }
+
+      .start-button {
+        min-height: 52px;
+        margin: clamp(12px, 2vh, 18px) 0;
+      }
+    }
+
+    @media (min-width: 920px) and (max-width: 1060px) {
+      main {
+        min-height: 100vh;
+        grid-template-columns: minmax(560px, 1fr) minmax(260px, 320px);
+        gap: 24px;
+        padding: 24px;
+        align-items: center;
+      }
+
+      .panel {
+        order: initial;
+        padding: 20px;
+      }
+
+      .scene {
+        width: min(100%, 700px);
+        min-height: min(72vh, 650px);
+      }
+
+      .combo-stage {
+        width: min(100%, 520px);
+        border-width: 7px;
+      }
+
+      .result-name {
+        min-height: 3rem;
+        font-size: clamp(2rem, 4vw, 2.8rem);
+      }
+
+      .start-button {
+        min-height: 54px;
+        margin: 18px 0;
       }
     }
 
@@ -572,16 +657,16 @@
 </head>
 <body>
   <div class="floating-icons" aria-hidden="true">
-    <img class="floating-icon" src="images/daniel.jpg" alt="">
-    <img class="floating-icon" src="images/elephant.jpg" alt="">
-    <img class="floating-icon" src="images/farhanah.jpg" alt="">
-    <img class="floating-icon" src="images/fox.jpg" alt="">
-    <img class="floating-icon" src="images/kitten.jpg" alt="">
-    <img class="floating-icon" src="images/lamb.jpg" alt="">
-    <img class="floating-icon" src="images/lewis.jpg" alt="">
-    <img class="floating-icon" src="images/panda.jpg" alt="">
-    <img class="floating-icon" src="images/penguin.jpg" alt="">
-    <img class="floating-icon" src="images/puppy.jpg" alt="">
+    <img class="floating-icon" data-plushie="daniel" src="images/PLQ/daniel.png" alt="">
+    <img class="floating-icon" data-plushie="elephant" src="images/PLQ/elephant.png" alt="">
+    <img class="floating-icon" data-plushie="farhanah" src="images/PLQ/farhanah.png" alt="">
+    <img class="floating-icon" data-plushie="fox" src="images/PLQ/fox.png" alt="">
+    <img class="floating-icon" data-plushie="kitten" src="images/PLQ/kitten.png" alt="">
+    <img class="floating-icon" data-plushie="lamb" src="images/PLQ/lamb.png" alt="">
+    <img class="floating-icon" data-plushie="lewis" src="images/PLQ/lewis.png" alt="">
+    <img class="floating-icon" data-plushie="panda" src="images/PLQ/panda.png" alt="">
+    <img class="floating-icon" data-plushie="penguin" src="images/PLQ/penguin.png" alt="">
+    <img class="floating-icon" data-plushie="puppy" src="images/PLQ/puppy.png" alt="">
   </div>
 
   <main>
@@ -597,7 +682,7 @@
         <div class="petal petal-four" aria-hidden="true"></div>
 
         <div class="combo-stage" id="comboStage">
-          <img class="combo-image" id="comboImage" src="images/daniel.jpg" alt="Brown plush bear in a flower garden">
+          <img class="combo-image" id="comboImage" src="images/PLQ/daniel.png" alt="Brown plush bear">
           <div class="combo-overlay">
             <p class="combo-eyebrow">Today's pick</p>
             <p class="combo-name" id="comboName" aria-live="polite">Ready</p>
@@ -649,48 +734,69 @@
     ];
 
     const visibleEntries = [...new Set(entries)];
-    const imageChoices = [
+    const queryParams = new URLSearchParams(window.location.search);
+    const imageSets = {
+      garden: {
+        basePath: "images/garden",
+        extension: "jpg"
+      },
+      plq: {
+        basePath: "images/PLQ",
+        extension: "png"
+      }
+    };
+    const defaultImageSet = "plq";
+    const requestedImageSet = (queryParams.get("set") || "").trim().toLowerCase();
+    const activeImageSetName = Object.prototype.hasOwnProperty.call(imageSets, requestedImageSet)
+      ? requestedImageSet
+      : defaultImageSet;
+    const activeImageSet = imageSets[activeImageSetName];
+    const plushieImages = [
       {
-        src: "images/daniel.jpg",
-        alt: "Brown plush bear in a flower garden"
+        id: "daniel",
+        alt: "Brown plush bear"
       },
       {
-        src: "images/elephant.jpg",
-        alt: "Elephant plushie in a flower garden"
+        id: "elephant",
+        alt: "Elephant plushie"
       },
       {
-        src: "images/farhanah.jpg",
-        alt: "White bunny plushie in a pink flower garden"
+        id: "farhanah",
+        alt: "White bunny plushie"
       },
       {
-        src: "images/fox.jpg",
-        alt: "Fox plushie in a flower garden"
+        id: "fox",
+        alt: "Fox plushie"
       },
       {
-        src: "images/kitten.jpg",
-        alt: "Kitten plushie in a flower garden"
+        id: "kitten",
+        alt: "Kitten plushie"
       },
       {
-        src: "images/lamb.jpg",
-        alt: "Lamb plushie in a flower garden"
+        id: "lamb",
+        alt: "Lamb plushie"
       },
       {
-        src: "images/lewis.jpg",
-        alt: "Yellow chick plushie in a flower garden"
+        id: "lewis",
+        alt: "Yellow chick plushie"
       },
       {
-        src: "images/panda.jpg",
-        alt: "Panda plushie in a flower garden"
+        id: "panda",
+        alt: "Panda plushie"
       },
       {
-        src: "images/penguin.jpg",
-        alt: "Penguin plushie in a flower garden"
+        id: "penguin",
+        alt: "Penguin plushie"
       },
       {
-        src: "images/puppy.jpg",
-        alt: "Puppy plushie in a flower garden"
+        id: "puppy",
+        alt: "Puppy plushie"
       }
     ];
+    const imageChoices = plushieImages.map((image) => ({
+      ...image,
+      src: getImagePath(image.id)
+    }));
 
     const defaultTiming = {
       imagePeriod: 500,
@@ -724,9 +830,12 @@
     let stopCycleTimer = 0;
     let celebrationTimer = 0;
 
+    function getImagePath(plushieId) {
+      return `${activeImageSet.basePath}/${plushieId}.${activeImageSet.extension}`;
+    }
+
     function getTimingParam(name, fallback) {
-      const params = new URLSearchParams(window.location.search);
-      const rawValue = params.get(name);
+      const rawValue = queryParams.get(name);
       const value = Number(rawValue);
 
       if (!Number.isFinite(value) || value <= 0) {
@@ -766,7 +875,7 @@
     }
 
     function getOscillationRadius() {
-      return window.matchMedia("(max-width: 860px)").matches ? 64 : 96;
+      return window.matchMedia("(max-width: 919px)").matches ? 64 : 96;
     }
 
     function randomViewportValue(min, max, unit) {
@@ -826,6 +935,20 @@
       event.preventDefault();
       setFloatingIconAnchor(event.currentTarget);
       randomizeFloatingIcon(event.currentTarget, false);
+    }
+
+    function applyActiveImages() {
+      const currentImage = imageChoices[currentCombo.imageIndex];
+      comboImage.src = currentImage.src;
+      comboImage.alt = currentImage.alt;
+
+      floatingIcons.forEach((icon) => {
+        const plushieId = icon.dataset.plushie;
+
+        if (plushieId) {
+          icon.src = getImagePath(plushieId);
+        }
+      });
     }
 
     function initializeFloatingIcons() {
@@ -960,6 +1083,7 @@
     }
 
     buildEntriesList();
+    applyActiveImages();
     initializeFloatingIcons();
     startButton.addEventListener("click", cyclePicker);
   </script>
