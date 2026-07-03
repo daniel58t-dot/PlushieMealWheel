@@ -81,15 +81,46 @@
       position: relative;
       z-index: 3;
       text-align: center;
+      --title-font-size: 2rem;
     }
 
-    h1 {
+    .title-block h1 {
       margin: 0;
       color: #5b3b2b;
-      font-size: clamp(2.35rem, 4.6vw, 5rem);
+      font-size: var(--title-font-size);
       line-height: 0.94;
       letter-spacing: 0;
       text-shadow: 0 4px 0 rgba(255, 255, 255, 0.7);
+    }
+
+    @media (min-width: 380px) {
+      .title-block {
+        --title-font-size: 2.35rem;
+      }
+    }
+
+    @media (min-width: 640px) {
+      .title-block {
+        --title-font-size: 3rem;
+      }
+    }
+
+    @media (min-width: 861px) {
+      .title-block {
+        --title-font-size: 3.8rem;
+      }
+    }
+
+    @media (min-width: 1200px) {
+      .title-block {
+        --title-font-size: 4.6rem;
+      }
+    }
+
+    @media (min-width: 1500px) {
+      .title-block {
+        --title-font-size: 5rem;
+      }
     }
 
     .scene {
@@ -254,6 +285,15 @@
       box-shadow: 0 14px 28px rgba(83, 58, 39, 0.2);
       animation: oscillateAround var(--float-duration, 8s) ease-in-out var(--float-delay, 0s) infinite both;
       will-change: transform;
+    }
+
+    .floating-icon.is-interactive {
+      pointer-events: auto;
+      cursor: pointer;
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-user-drag: none;
     }
 
     .panel {
@@ -778,6 +818,16 @@
       icon.style.transform = `translate3d(var(--anchor-x), var(--anchor-y), 0) scale(${scale.toFixed(2)}) rotate(${randomBetween(-14, 14).toFixed(1)}deg)`;
     }
 
+    function refreshFloatingIcon(event) {
+      if (event.pointerType === "mouse" && event.button !== 0) {
+        return;
+      }
+
+      event.preventDefault();
+      setFloatingIconAnchor(event.currentTarget);
+      randomizeFloatingIcon(event.currentTarget, false);
+    }
+
     function initializeFloatingIcons() {
       floatingIcons.forEach((icon) => {
         if (prefersReducedMotion) {
@@ -787,6 +837,9 @@
 
         setFloatingIconAnchor(icon);
         randomizeFloatingIcon(icon, true);
+        icon.classList.add("is-interactive");
+        icon.draggable = false;
+        icon.addEventListener("pointerdown", refreshFloatingIcon);
       });
     }
 
