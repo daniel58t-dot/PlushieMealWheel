@@ -702,7 +702,7 @@
   </main>
 
   <script>
-    const entries = [
+    const plqfoodlist = [
       "Saizeriya",
       "Jollibee",
       "Hot hideout",
@@ -733,7 +733,43 @@
       "sukiya"
     ];
 
-    const visibleEntries = [...new Set(entries)];
+    const caffeinelist = [
+      "chagee",
+      "chagee",
+      "chagee",
+      "chi cha",
+      "chi cha",
+      "chi cha",
+      "koi",
+      "koi",
+      "koi",
+      "itea",
+      "itea",
+      "itea",
+      "luckin",
+      "luckin",
+      "luckin",
+      "alchemist",
+      "tomoro",
+      "tomoro",
+      "tomoro",
+      "yakun",
+      "yakun",
+      "yakun",
+      "toastbox",
+      "toastbox",
+      "toastbox",
+      "heytea",
+      "heytea",
+      "heytea",
+      "kopitiam",
+      "kopitiam",
+      "kopitiam",
+      "oldteahut",
+      "oldteahut",
+      "oldteahut",
+      "huggs"
+    ];
     const queryParams = new URLSearchParams(window.location.search);
     const imageSets = {
       garden: {
@@ -745,12 +781,29 @@
         extension: "png"
       }
     };
-    const defaultImageSet = "plq";
-    const requestedImageSet = (queryParams.get("set") || "").trim().toLowerCase();
-    const activeImageSetName = Object.prototype.hasOwnProperty.call(imageSets, requestedImageSet)
-      ? requestedImageSet
-      : defaultImageSet;
-    const activeImageSet = imageSets[activeImageSetName];
+    const setConfigs = {
+      plq: {
+        imageSet: imageSets.plq,
+        list: plqfoodlist
+      },
+      garden: {
+        imageSet: imageSets.garden,
+        list: plqfoodlist
+      },
+      caffeine: {
+        imageSet: imageSets.plq,
+        list: caffeinelist
+      }
+    };
+    const defaultSet = "plq";
+    const requestedSet = (queryParams.get("set") || "").trim().toLowerCase();
+    const activeSetName = Object.prototype.hasOwnProperty.call(setConfigs, requestedSet)
+      ? requestedSet
+      : defaultSet;
+    const activeSet = setConfigs[activeSetName];
+    const activeImageSet = activeSet.imageSet;
+    const entries = activeSet.list;
+    const visibleEntries = [...new Set(entries)];
     const plushieImages = [
       {
         id: "daniel",
