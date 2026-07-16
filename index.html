@@ -657,16 +657,16 @@
 </head>
 <body>
   <div class="floating-icons" aria-hidden="true">
-    <img class="floating-icon" data-plushie="daniel" src="images/PLQ/daniel.png" alt="">
-    <img class="floating-icon" data-plushie="elephant" src="images/PLQ/elephant.png" alt="">
-    <img class="floating-icon" data-plushie="farhanah" src="images/PLQ/farhanah.png" alt="">
-    <img class="floating-icon" data-plushie="fox" src="images/PLQ/fox.png" alt="">
-    <img class="floating-icon" data-plushie="kitten" src="images/PLQ/kitten.png" alt="">
-    <img class="floating-icon" data-plushie="lamb" src="images/PLQ/lamb.png" alt="">
-    <img class="floating-icon" data-plushie="lewis" src="images/PLQ/lewis.png" alt="">
-    <img class="floating-icon" data-plushie="panda" src="images/PLQ/panda.png" alt="">
-    <img class="floating-icon" data-plushie="penguin" src="images/PLQ/penguin.png" alt="">
-    <img class="floating-icon" data-plushie="puppy" src="images/PLQ/puppy.png" alt="">
+    <img class="floating-icon" data-plushie="daniel" src="images/PLQ/thumbs/daniel.webp" alt="" decoding="async">
+    <img class="floating-icon" data-plushie="elephant" src="images/PLQ/thumbs/elephant.webp" alt="" decoding="async">
+    <img class="floating-icon" data-plushie="farhanah" src="images/PLQ/thumbs/farhanah.webp" alt="" decoding="async">
+    <img class="floating-icon" data-plushie="fox" src="images/PLQ/thumbs/fox.webp" alt="" decoding="async">
+    <img class="floating-icon" data-plushie="kitten" src="images/PLQ/thumbs/kitten.webp" alt="" decoding="async">
+    <img class="floating-icon" data-plushie="lamb" src="images/PLQ/thumbs/lamb.webp" alt="" decoding="async">
+    <img class="floating-icon" data-plushie="lewis" src="images/PLQ/thumbs/lewis.webp" alt="" decoding="async">
+    <img class="floating-icon" data-plushie="panda" src="images/PLQ/thumbs/panda.webp" alt="" decoding="async">
+    <img class="floating-icon" data-plushie="penguin" src="images/PLQ/thumbs/penguin.webp" alt="" decoding="async">
+    <img class="floating-icon" data-plushie="puppy" src="images/PLQ/thumbs/puppy.webp" alt="" decoding="async">
   </div>
 
   <main>
@@ -682,7 +682,7 @@
         <div class="petal petal-four" aria-hidden="true"></div>
 
         <div class="combo-stage" id="comboStage">
-          <img class="combo-image" id="comboImage" src="images/PLQ/daniel.png" alt="Brown plush bear">
+          <img class="combo-image" id="comboImage" src="images/PLQ/full/daniel.webp" alt="Brown plush bear" decoding="async" fetchpriority="high">
           <div class="combo-overlay">
             <p class="combo-eyebrow">Today's pick</p>
             <p class="combo-name" id="comboName" aria-live="polite">Ready</p>
@@ -703,82 +703,54 @@
 
   <script>
     const plqfoodlist = [
-      "Saizeriya",
-      "Jollibee",
-      "Hot hideout",
-      "PLSQ Kopitiam",
-      "Dabao Box",
-      "Singpost Astons",
-      "Singpost Twyst",
-      "PLQ Kopitiam",
-      "Sanook",
-      "Guan guan",
-      "Subway",
-      "Donki",
-      "Guan guan",
-      "Scarlett",
-      "PLSQ Kopitiam",
-      "PLQ Kopitiam",
-      "PLQ Sukiya",
-      "haig road",
-      "haig road",
-      "haig road",
-      "Baiwei",
-      "Baiwei",
-      "Baiwei",
-      "lotus thai",
-      "haig road",
-      "sukiya",
-      "sukiya",
-      "sukiya"
+      { name: "Saizeriya", weight: 1 },
+      { name: "Jollibee", weight: 1 },
+      { name: "Hot hideout", weight: 1 },
+      { name: "PLSQ Kopitiam", weight: 2 },
+      { name: "Dabao Box", weight: 1 },
+      { name: "Singpost Astons", weight: 1 },
+      { name: "Singpost Twyst", weight: 1 },
+      { name: "PLQ Kopitiam", weight: 2 },
+      { name: "Sanook", weight: 1 },
+      { name: "Guan guan", weight: 2 },
+      { name: "Subway", weight: 1 },
+      { name: "Donki", weight: 1 },
+      { name: "Scarlett", weight: 1 },
+      { name: "PLQ Sukiya", weight: 1 },
+      { name: "haig road", weight: 4 },
+      { name: "Baiwei", weight: 3 },
+      { name: "lotus thai", weight: 1 },
+      { name: "sukiya", weight: 3 }
     ];
 
     const caffeinelist = [
-      "chagee",
-      "chagee",
-      "chagee",
-      "chi cha",
-      "chi cha",
-      "chi cha",
-      "koi",
-      "koi",
-      "koi",
-      "itea",
-      "itea",
-      "itea",
-      "luckin",
-      "luckin",
-      "luckin",
-      "alchemist",
-      "tomoro",
-      "tomoro",
-      "tomoro",
-      "yakun",
-      "yakun",
-      "yakun",
-      "toastbox",
-      "toastbox",
-      "toastbox",
-      "heytea",
-      "heytea",
-      "heytea",
-      "kopitiam",
-      "kopitiam",
-      "kopitiam",
-      "oldteahut",
-      "oldteahut",
-      "oldteahut",
-      "huggs"
+      { name: "chagee", weight: 3 },
+      { name: "chi cha", weight: 3 },
+      { name: "koi", weight: 3 },
+      { name: "itea", weight: 3 },
+      { name: "luckin", weight: 3 },
+      { name: "alchemist", weight: 1 },
+      { name: "tomoro", weight: 3 },
+      { name: "yakun", weight: 3 },
+      { name: "toastbox", weight: 3 },
+      { name: "heytea", weight: 3 },
+      { name: "kopitiam", weight: 3 },
+      { name: "oldteahut", weight: 3 },
+      { name: "huggs", weight: 1 }
     ];
     const queryParams = new URLSearchParams(window.location.search);
     const imageSets = {
       garden: {
-        basePath: "images/garden",
-        extension: "jpg"
+        basePath: "images/garden/full",
+        extension: "webp",
+        floatingBasePath: "images/garden/thumbs",
+        floatingExtension: "webp"
       },
       plq: {
-        basePath: "images/PLQ",
-        extension: "png"
+        basePath: "images/PLQ/full",
+        extension: "webp",
+        floatingBasePath: "images/PLQ/thumbs",
+        floatingExtension: "webp"
       }
     };
     const setConfigs = {
@@ -802,8 +774,8 @@
       : defaultSet;
     const activeSet = setConfigs[activeSetName];
     const activeImageSet = activeSet.imageSet;
-    const entries = activeSet.list;
-    const visibleEntries = [...new Set(entries)];
+    const entries = expandWeightedList(activeSet.list);
+    const visibleEntries = activeSet.list.map((item) => item.name);
     const plushieImages = [
       {
         id: "daniel",
@@ -867,9 +839,9 @@
     const floatingIcons = Array.from(document.querySelectorAll(".floating-icon"));
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const timing = {
-      imagePeriod: getTimingParam("imagePeriod", defaultTiming.imagePeriod),
-      textPeriod: getTimingParam("textPeriod", defaultTiming.textPeriod),
-      totalDuration: getTimingParam("totalDuration", defaultTiming.totalDuration)
+      imagePeriod: getTimingParam("imagePeriod", defaultTiming.imagePeriod, 100, 5000),
+      textPeriod: getTimingParam("textPeriod", defaultTiming.textPeriod, 100, 5000),
+      totalDuration: getTimingParam("totalDuration", defaultTiming.totalDuration, 500, 30000)
     };
 
     let selectedName = null;
@@ -887,7 +859,15 @@
       return `${activeImageSet.basePath}/${plushieId}.${activeImageSet.extension}`;
     }
 
-    function getTimingParam(name, fallback) {
+    function getFloatingImagePath(plushieId) {
+      return `${activeImageSet.floatingBasePath}/${plushieId}.${activeImageSet.floatingExtension}`;
+    }
+
+    function expandWeightedList(list) {
+      return list.flatMap((item) => Array(item.weight).fill(item.name));
+    }
+
+    function getTimingParam(name, fallback, min, max) {
       const rawValue = queryParams.get(name);
       const value = Number(rawValue);
 
@@ -895,7 +875,8 @@
         return fallback;
       }
 
-      return value < 20 ? value * 1000 : value;
+      const milliseconds = value < 20 ? value * 1000 : value;
+      return Math.min(max, Math.max(min, milliseconds));
     }
 
     function buildEntriesList() {
@@ -999,7 +980,7 @@
         const plushieId = icon.dataset.plushie;
 
         if (plushieId) {
-          icon.src = getImagePath(plushieId);
+          icon.src = getFloatingImagePath(plushieId);
         }
       });
     }
